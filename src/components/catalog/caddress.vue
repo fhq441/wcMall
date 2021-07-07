@@ -32,14 +32,14 @@ export default {
   methods: {
     save () {
       console.log("openid:"+this.openid)
-     if(!this.openid){
-          Toast({
-                message: '请重新授权登录',
-                position: 'middle',
-                duration: 5000
-              });
-              return;
-     }
+    //  if(!this.openid){
+    //       Toast({
+    //             message: '请重新授权登录',
+    //             position: 'middle',
+    //             duration: 5000
+    //           });
+    //           return;
+    //  }
 
       if (this.addressee && this.codepwd && this.address && this.mobile !== '') {
         var that = this

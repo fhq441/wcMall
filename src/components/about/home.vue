@@ -8,10 +8,10 @@
             </p> -->
             <div class="avatar">
                 <div class="img">
-                    <img src="./avatar.png" />
+                    <img :src="user.wxImage" />
                 </div>
                 <div class="person-info">
-                    <p class="nick-name">{{user.nickname}}</p>
+                    <p class="nick-name">{{user.wxNickName}}</p>
                 </div>
             </div>
         </div>
@@ -118,7 +118,7 @@ export default {
   },
   mounted: function () { 
         this.user = sessionStorage.userInfo
-      console.log(JSON.stringify(user))
+      console.log(JSON.stringify(this.user))
   }
 }
 </script>
