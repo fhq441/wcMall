@@ -1,0 +1,6 @@
+{
+    "vetur.validation.template": false,
+    "scss.lint.propertyIgnoredDueToDisplay": "ignore",
+    "css.lint.propertyIgnoredDueToDisplay": "ignore",
+    "less.lint.vendorPrefix": "ignore"
+}

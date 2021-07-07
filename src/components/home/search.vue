@@ -61,7 +61,7 @@ export default {
       //  进入详情页
       let that = this
       let arr = []
-      this.axios.post('http://www.ethedot.com/chatshop/Index/test', {
+      this.axios.post('http://card.yhy2009.com/Index/test', {
         id: sessionStorage.getItem('id')
       })
       .then(function (response) {
@@ -79,8 +79,8 @@ export default {
         console.log(error)
       })
       // 点击率
-      this.axios.post('http://www.ethedot.com/chatshop/Index/clickRate', {
-        gid: item.gid,
+      this.axios.post('http://card.yhy2009.com/Index/clickRate', {
+        id: item.id,
         id: sessionStorage.getItem('id')
       })
       .then(function (response) {
@@ -91,7 +91,7 @@ export default {
     },
     clear () {
       var that = this
-      this.axios.post('http://www.ethedot.com/chatshop/Index/clearHis', {
+      this.axios.post('http://card.yhy2009.com/Index/clearHis', {
         clearHis: 1,
         id: sessionStorage.getItem('id')
       })
@@ -134,25 +134,25 @@ export default {
       var that = this
       var arr = []
       that.searchList = []
-      that.axios.post('http://www.ethedot.com/chatshop/Index/test', {
+      that.axios.post('http://card.yhy2009.com/Index/test', {
         id: sessionStorage.getItem('id')
       })
       .then(function (response) {
         var data = response.data
         for (let i = 0; i < data.length; i++) {
-          arr.push({gid: data[i].gid, name: data[i].name})
+          arr.push({id: data[i].id, name: data[i].name})
         }
         if (that.searchContent.length !== 0) {
           for (let i = 0; i < arr.length; i++) {
             if (arr[i].name.length >= that.searchContent.length) {
               var reg = new RegExp(that.searchContent)
               if (arr[i].name.match(reg)) {
-                that.searchList.push({gid: data[i].gid, name: arr[i].name})
+                that.searchList.push({id: data[i].id, name: arr[i].name})
               }
             } else {
               var reg1 = new RegExp(arr[i])
               if (that.searchContent.match(reg1)) {
-                that.searchList.push({gid: data[i].gid, name: arr[i]})
+                that.searchList.push({id: data[i].id, name: arr[i]})
               }
             }
           }
@@ -162,7 +162,7 @@ export default {
         console.log(error)
       })
       // 传搜索的值
-      that.axios.post('http://www.ethedot.com/chatshop/Index/dataSearh', {
+      that.axios.post('http://card.yhy2009.com/Index/dataSearh', {
         name: that.searchContent,
         id: sessionStorage.getItem('id')
       })
@@ -176,7 +176,7 @@ export default {
   mounted: function () {
     this.distinguish()
     var that = this
-    this.axios.post('http://www.ethedot.com/chatshop/Index/getSearh', {
+    this.axios.post('http://card.yhy2009.com/Index/getSearh', {
       id: sessionStorage.getItem('id')
     })
     .then(function (response) {

@@ -6,24 +6,24 @@
     </div> -->
     <div class="mynav">
       <mt-tabbar>
-        <mt-tab-item>
+        <!-- <mt-tab-item>
           <router-link to="/home">
             <img src="./images/icon/home.png" alt=""><br> 
             首页
           </router-link>
-        </mt-tab-item>
+        </mt-tab-item> -->
         <mt-tab-item>
-          <router-link to="/catalog">
+          <router-link to="/home">
             <img src="./images/icon/Category.png" alt=""><br> 
-            分类
+            首页
           </router-link>
         </mt-tab-item>
-        <mt-tab-item>
+          <!-- <mt-tab-item>
           <router-link to="/cart">
             <img src="./images/icon/cart.png" alt=""><br> 
             购物车
           </router-link>
-        </mt-tab-item>
+        </mt-tab-item>   -->
         <mt-tab-item>
           <router-link to="/about">
             <img src="./images/icon/account.png" alt=""><br> 
@@ -57,7 +57,7 @@ export default {
   mounted: function () {
     // var that = this
     // this.show = false
-    // this.axios.get('http://www.ethedot.com/chatshop/Index/index')
+    // this.axios.get('http://card.yhy2009.com/Index/index')
     // .then(function (response) {
     //   console.log(response)
     //   that.myArr.push(response.data.id, response.data.nickname, response.data.openid)
@@ -70,7 +70,7 @@ export default {
     //   alert('身份过期，请重新登录！')
     // }
     // this.distinguish = 1
-    this.distinguish()
+    // this.distinguish()
   }
 }
 </script>
@@ -85,7 +85,7 @@ export default {
     position: fixed;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(73, 218, 104, 0.8);
     z-index: 100;
     button{
       width: 50%;

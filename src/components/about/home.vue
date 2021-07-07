@@ -2,16 +2,16 @@
     <div class="about_home">
         <div class="head">
             <img class="header-bg" src="./header_bg.png" />
-            <p class="message">
+            <!-- <p class="message">
                 <router-link to="/about/message">
                 <span class="el-icon-message"></span>消息</router-link>
-            </p>
+            </p> -->
             <div class="avatar">
                 <div class="img">
-                    <img :src="pic" />
+                    <img src="./avatar.png" />
                 </div>
                 <div class="person-info">
-                    <p class="nick-name">{{ user }}</p>
+                    <p class="nick-name">{{user.nickname}}</p>
                 </div>
             </div>
         </div>
@@ -28,16 +28,16 @@
                 </router-link>
                 <li class="list">
                     <ul>
-                        <li>
+                        <!-- <li>
                             <router-link to="/about/orderList/obligation">
                                 <el-badge :value="num1" class="item">
                                     <img src="./icon-obligation.png" alt="">
                                 </el-badge>
                                 <p>待付款</p>   
                             </router-link>                         
-                        </li>
+                        </li> -->
                         <li>
-                            <router-link to="/about/orderList/delivery">
+                            <router-link to="/about/orderList/delivey">
                                 <el-badge :value="num2" class="item">
                                     <img src="./icon-delivery.png" alt="">
                                 </el-badge>
@@ -45,38 +45,23 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/about/orderList/harvest">
+                            <router-link to="/about/orderList/deliveyed">
                                 <el-badge :value="num3" class="item">
                                     <img src="./icon-harvest.png" alt="">
                                 </el-badge>
-                                <p>待收货</p>
+                                <p>已发货</p>
                             </router-link>
                         </li>
-                        <li>
-                            <router-link to="/about/orderList/ratings">
-                                <el-badge :value="num4" class="item">
-                                    <img src="./icon-ratings.png" alt="">
-                                </el-badge>
-                                <p>已完成</p>
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link to="/about/orderList/drawback">
-                                <!-- <el-badge :value="num" class="item"> -->
-                                    <img src="./icon-drawback.png" alt="">
-                                <!-- </el-badge> -->
-                                <p>退款/售后</p>
-                            </router-link>
-                        </li>
+                       
                     </ul>
                 </li>
-                <li>
+                <!-- <li>
                     <span class="list-icon">
                         <img src="./icon-wallet.png" alt="">
                     </span>
                     <span class="text">我的钱包</span>
-                </li>
-                <li class="balance">
+                </li> -->
+                <!-- <li class="balance">
                     <div class="left-slide">
                         <p>0</p>
                         <p>积分</p>
@@ -85,8 +70,8 @@
                         <p><span>￥0</span></p>
                         <p>余额</p>
                     </div>
-                </li>
-                <router-link to="/about/collect">
+                </li> -->
+                <!-- <router-link to="/about/collect">
                     <li>
                         <span class="list-icon">
                             <img src="./icon-star.png" alt="">
@@ -94,7 +79,7 @@
                         <span class="text">收藏夹</span>
                         <span class="el-icon-arrow-right"></span>
                     </li>
-                </router-link>
+                </router-link> -->
                 <!-- <router-link to="/about/orderList/obligation/myOrder/address">
                     <li>
                         <span class="color color4"></span>
@@ -131,38 +116,9 @@ export default {
   },
   methods: {
   },
-  mounted: function () {
-    this.distinguish()
-    var that = this
-    this.axios.post('http://www.ethedot.com/chatshop/Index/index', {
-      id: sessionStorage.getItem('id')
-    })
-    .then(function (response) {
-      that.user = response.data.nickname
-      that.pic = response.data.headimgurl
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-
-    this.axios.post('http://www.ethedot.com/chatshop/Index/orderlist')
-    .then(function (response) {
-      response = response.data
-      for (var i = 0; i < response.length; i++) {
-        if (response[i].state === '0') {
-          that.num1 += 1
-        } else if (response[i].state === '1') {
-          that.num2 += 1
-        } else if (response[i].state === '2') {
-          that.num3 += 1
-        } else if (response[i].state === '3') {
-          that.num4 += 1
-        }
-      }
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
+  mounted: function () { 
+        this.user = sessionStorage.userInfo
+      console.log(JSON.stringify(user))
   }
 }
 </script>

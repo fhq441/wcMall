@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     delStore: function (key, item) {
-      this.axios.post('http://www.ethedot.com/chatshop/Index/delStore', {
+      this.axios.post('http://card.yhy2009.com/Index/delStore', {
         id: item.id
       })
       .then(function (response) {
@@ -51,20 +51,20 @@ export default {
   mounted: function () {
     this.distinguish()
     var that = this
-    this.axios.post('http://www.ethedot.com/chatshop/Index/store', {
+    this.axios.post('http://card.yhy2009.com/Index/store', {
       id: sessionStorage.getItem('id')
     })
     .then(function (response) {
       response = response.data
       for (var i = 0; i < response.length; i++) {
         that.goods.push({
-          gid: response[i].gid,
+          id: response[i].id,
           id: response[i].id,
           name: response[i].name,
           price: parseFloat(response[i].price),
           total: parseFloat(response[i].price),
           counter: parseFloat(response[i].sum),
-          pic: 'http://www.ethedot.com/chatshop/Public/Uploads/' + response[i].pic,
+          pic: 'http://card.yhy2009.com/Public/Uploads/' + response[i].pic,
           status: false
         })
       }

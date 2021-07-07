@@ -71,7 +71,7 @@ export default {
       var that = this
       item.status = !item.status
       if (item.status === true) {
-        this.axios.post('http://www.ethedot.com/chatshop/Index/selectAddress', {
+        this.axios.post('http://card.yhy2009.com/Index/selectAddress', {
           aid: item.aid,
           id: sessionStorage.getItem('id'),
           order: that.childOrder
@@ -93,7 +93,7 @@ export default {
         for (let i = 0; i < 4; i++) {
           arr.push(this.newData[i])
         }
-        this.axios.post('http://www.ethedot.com/chatshop/Index/address', {
+        this.axios.post('http://card.yhy2009.com/Index/address', {
           address: arr,
           id: sessionStorage.getItem('id')
         })
@@ -124,7 +124,7 @@ export default {
         for (let i = 0; i < 4; i++) {
           arr.push(this.newData[i])
         }
-        this.axios.post('http://www.ethedot.com/chatshop/Index/updateaddress', {
+        this.axios.post('http://card.yhy2009.com/Index/updateaddress', {
           address: arr,
           aid: that.changeID,
           id: sessionStorage.getItem('id')
@@ -144,7 +144,7 @@ export default {
     },
     deladdress (item, key) {
       var that = this
-      this.axios.post('http://www.ethedot.com/chatshop/Index/deladdress', {
+      this.axios.post('http://card.yhy2009.com/Index/deladdress', {
         id: sessionStorage.getItem('id'),
         aid: item.aid
       })
@@ -165,7 +165,7 @@ export default {
   mounted: function () {
     this.distinguish()
     var that = this
-    this.axios.post('http://www.ethedot.com/chatshop/Index/getaddress', {
+    this.axios.post('http://card.yhy2009.com/Index/getaddress', {
       id: sessionStorage.getItem('id')
     })
     .then(function (response) {

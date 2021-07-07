@@ -5,20 +5,23 @@
             <div class="goods-wrapper">
                 <div class="goods">
                     <div class="image">
-                        <img :src='item.pic'>
+                        <img :src='item.top_image'>
                     </div>
                     <div class="info-wrapper">
                         <div class="amount-wrapper">
                             <div class="left">
-                                <p>{{ item.name }}</p>
-                                <p>数量:<span>{{ item.counter }}</span></p>
+                                <p>{{ item.product_name }}</p>
+                                <!-- <p>数量:<span>1</span></p> -->
+                                 <p>韵达快递</p>
                             </div>
                             <div class="right">
-                                <p>金额：<span class="price">￥{{ item.total }}</span></p>
-                                <el-button type="primary" @click="showAlert"  size="mini">提醒发货</el-button>
+                                <p>金额：<span class="price">￥{{ item.product_price }}</span></p>
+                                <p>fffFFFF12345678</p>
                             </div>
+                            
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </li>
@@ -47,25 +50,12 @@ export default {
     }
   },
   mounted: function () {
-    this.distinguish()
     var that = this
-    this.axios.post('http://card.yhy2009.com/Index/orderlist', {
-      id: sessionStorage.getItem('id')
+    this.axios.post('http://card.yhy2009.com/frontyuserOrder/list', {
+      openid: sessionStorage.openid
     })
-    .then(function (response) {
-      response = response.data
-      for (var i = 0; i < response.length; i++) {
-        if (response[i].state === '1') {
-          that.goods.push({
-            oid: response[i].oid,
-            name: response[i].name,
-            total: parseFloat(response[i].price),
-            counter: parseFloat(response[i].sum),
-            pic: 'http://card.yhy2009.com/Public/Uploads/' + response[i].pic,
-            status: false
-          })
-        }
-      }
+    .then(function (r) { 
+        that.goods = r.data.rows
     })
     .catch(function (error) {
       console.log(error)

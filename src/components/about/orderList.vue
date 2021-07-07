@@ -8,11 +8,12 @@
             <!-- <mt-button slot="right"><router-link to="/about/orderList/allOrder">查看所有订单</router-link></mt-button> -->
         </mt-header>
         <nav>
-            <router-link to="/about/orderList/obligation">待付款</router-link>
-            <router-link to="/about/orderList/delivery">待发货</router-link>
-            <router-link to="/about/orderList/harvest">待收货</router-link>
+            <!-- <router-link to="/about/orderList/obligation">待付款</router-link> -->
+            <router-link to="/about/orderList/delivey">待发货</router-link>
+            <router-link to="/about/orderList/deliveyed">已发货</router-link>
+            <!-- <router-link to="/about/orderList/harvest">待收货</router-link>
             <router-link to="/about/orderList/ratings">已完成</router-link>
-            <router-link to="/about/orderList/drawback">退款/售后</router-link>
+            <router-link to="/about/orderList/drawback">退款/售后</router-link> -->
         </nav>        
     </div>
     <router-view></router-view>

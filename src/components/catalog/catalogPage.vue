@@ -1,112 +1,107 @@
 <template>
-  <div class="catalog">
-    <div class="left">
-      <ul class="leftItem">
-        <li v-for="(item, key) in recommend" :class="{ itemActive: activeName == item.catalog }" @click="changItem(item, key+1)" v-bind:key="item.id">
-          {{ item.catalog }}
-        </li>
-      </ul>
-    </div>
-    <div class="right">
-        <div class="rightItem">
-            <div class="loadGoods" v-show="loading">
-              <div class="spinner">
-                <div class="rect1"></div>
-                <div class="rect2"></div>
-                <div class="rect3"></div>
-                <div class="rect4"></div>
-                <div class="rect5"></div>
-              </div>
-            </div>
-            <ul>
-              <li v-for="(item, index) in goods" @click="goDetail(item)" :key="item.id">
-                <router-link to=''><img class="animated zoomIn" :src="item.src" alt=""></router-link>
-                <p :title="item.name">{{ item.name }}</p>
-              </li>    
-            </ul>            
-        </div>
-    </div>
+
+<div>
+<mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore">
+  <ul>
+    <mt-cell v-for="(item, index) in goods" @click="goDetail(item)" :key="item.id"  :title="item.productName">
+  <span>￥{{item.productPrice}}</span>
+  <span>{{item.prodCity}}</span>
+  <img slot="icon" :src="item.topImage" width="100" height="100">
+  <div>
+    </br>
   </div>
+</mt-cell>
+  </ul>
+</mt-loadmore>
+
+
+
+ 
+
+</div>
+ 
 </template>
 
 <script>
+import { Loadmore } from 'mint-ui';
+ import { Toast } from 'mint-ui';
 export default {
   data () {
     return {
       recommend: [{
-        catalog: '全部'
+        valuee: ''
       }],
       goods: [],
-      activeName: '全部',
+      activeName: '',
       firstTid: '',
-      loading: false
+      loading: false,
+      allLoaded:false
     }
   },
   methods: {
+    loadTop() { 
+  this.$refs.loadmore.onTopLoaded();
+},
+loadBottom() { 
+  this.allLoaded = true;// if all data are loaded
+  this.$refs.loadmore.onBottomLoaded();
+},
+ 
     changItem (item, key) {
-      this.activeName = item.catalog
+      this.activeName = item.keyy
+      console.log(this.activeName)
       this.goods = []
       var that = this
-      this.axios.post('http://www.ethedot.com/chatshop/Index/test', {
-        id: sessionStorage.getItem('id')
+      this.axios.post('http://card.yhy2009.com/frontyproduct/frontlist', {
+        productType: that.activeName
       })
-      .then(function (response) {
-        for (var i = 0; i < response.data.length; i++) {
-          if (response.data[i].tid.match(item.tid)) {
-            that.goods.push({gid: response.data[i].gid, name: response.data[i].name, src: 'http://www.ethedot.com/chatshop/Public/Uploads/' + response.data[i].pic})
-          }
-        }
+      .then(function (r) {
+        that.goods = r.data.rows
       })
       .catch(function (error) {
         console.log(error)
       })
     },
     goDetail (item) {
-      sessionStorage.gid = item.gid
-      // 点击率
-      this.axios.post('http://www.ethedot.com/chatshop/Index/clickRate', {
-        id: sessionStorage.getItem('id'),
-        gid: item.gid
-      })
-      .then(function (response) {
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-      this.$router.push('/catalog/detail/' + item.gid)
+      sessionStorage.id = item.id
+      this.$router.push('/catalog/detail/'+item.id)
+
     }
   },
   mounted: function () {
-    this.loading = true
-    this.distinguish()
+  //  sessionStorage.openid = 'oTudI6BTjcmyc_EhV515KokQMQe8'
+   
+  //  this.$toast.show({
+  //    text: sessionStorage.openid,
+  //    position: 'bottom'
+  //  })
+  console.log("-------------------------------------")
+   console.log(sessionStorage.openid)
+   console.log("-------------------------------------")
     var that = this
     // 获取分类
-    this.axios.post('http://www.ethedot.com/chatshop/Index/typelist', {
-      id: sessionStorage.getItem('id')
+    this.axios.post('http://card.yhy2009.com/frontdict/queryList', {
+      tableName: 'y_product',
+      fieldName: 'product_type'
     })
     .then(function (response) {
       that.loading = false
-      for (var i = 0; i < response.data.length; i++) {
-        that.recommend.push({tid: response.data[i].tid, catalog: response.data[i].comment})
-      }
+      that.recommend = response.data
     })
     .catch(function (error) {
       console.log(error)
     })
-    // if (sessionStorage.id === ',,') {
-    //   alert('身份过期，请重新登录！')
-    // }
+    if (sessionStorage.openid === ',,') {
+      alert('身份过期，请重新登录！')
+    }
     // 获取商品
-    this.axios.post('http://www.ethedot.com/chatshop/Index/test', {
-      id: sessionStorage.getItem('id')
-    })
-    .then(function (response) {
-      // var matchId = that.recommend[0].tid
-      for (var i = 0; i < response.data.length; i++) {
-        if (response.data[i].tid.match(that.firstTid)) {
-          that.goods.push({gid: response.data[i].gid, name: response.data[i].name, src: 'http://www.ethedot.com/chatshop/Public/Uploads/' + response.data[i].pic})
-        }
-      }
+    // this.axios.post('http://card.yhy2009.com/frontyproduct/frontlist', {
+    //   productType: that.activeName
+    // })
+    let changeCode = sessionStorage.changeCode  
+this.axios.post('http://card.yhy2009.com/frontyproduct/queryListByIds/'+changeCode )
+    .then(function (r) {
+      that.goods = r.data
     })
     .catch(function (error) {
       console.log(error)

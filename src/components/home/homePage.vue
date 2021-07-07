@@ -1,109 +1,165 @@
 <template>
-  <div class="homePage">
-    <div class="search-top">
-      <div class="search">
-          <router-link to="/home/search">
-            <i class="el-icon-search"></i>
-            <input type="text">
-            <button class="btn-search">搜索</button>
-          </router-link>
-      </div>
-    </div>
-    <mt-swipe :auto="0">
-      <mt-swipe-item v-for="item in banners" :key="item.id">
-          <img @click="banner(item)" :src="item.pic" alt="">
-      </mt-swipe-item>
-    </mt-swipe>
-      <!-- <el-carousel :interval="3000" arrow="always">
-        <el-carousel-item v-for="item in banners" :key="item.id">
-          <img @click="banner(item)" :src="item.pic" alt="">
-        </el-carousel-item>
-      </el-carousel> -->
-    <div class="list">
-      <div class="loadhome" v-show="loading">
-        <div class="spinner">
-          <div class="rect1"></div>
-          <div class="rect2"></div>
-          <div class="rect3"></div>
-          <div class="rect4"></div>
-          <div class="rect5"></div>
-        </div>
-      </div>
-      <div class="title">
-        <font>推荐</font>
-      </div>
-      <li v-for="item in goods" :key="item.id">
-        <div class="goods" @click="goDetail(item)">
-          <img v-lazy='item' :src="item.src" alt="">
-          <p class="text">
-            <span class="name">{{ item.name }}</span>
-            ￥<span class="price">{{ item.price }}</span>
-          </p>
-        </div>
-      </li>
-    </div>
+  <div>
+    <mt-field
+      label="券码号" type="text" :state="checkstate" :attr="{ maxlength: 12 }" @blur="checkChangeCode"
+      placeholder=" 请输入 券码号"
+      v-model="changeCode"
+    ></mt-field>
+    <mt-button size="normal" type="primary" @click="queryProudct">查看可兑换商品</mt-button>
+
+    <mt-button size="normal" type="default" @click="wxLogin">授权登录测试口</mt-button>
   </div>
 </template>
-
+ 
 <script>
+import { Button } from "mint-ui";
+import { Cell } from "mint-ui";
+import { Toast } from "mint-ui";
 export default {
-  data () {
+  data() {
     return {
       goods: [],
       banners: [],
-      loading: false
-    }
+      checkstate: '',
+      loading: false,
+      appid: "wxf4fcbe12be02841e",
+      appSecret: "c4a989610584527a4f8375b48e5f198c",
+      access_token: "",
+      expires_in: 0,
+      refresh_token: "",
+      scope: "",
+      openid: "",
+      changeCode: "",
+      moreproduct: false,
+      moreproductList: [],
+    };
   },
   methods: {
-    banner (item) {
-      // sessionStorage.gid = item.gid
-      this.$router.push('/catalog/detail/' + item.gid)
+    checkChangeCode(){
+     this.changeCode = typeof this.changeCode === 'undefined' ? '' : this.changeCode.trim()
+ if(this.changeCode.length<12){
+   this.checkstate = 'error'
+ }else{
+    this.checkstate = ''
+ }
     },
-    goDetail (item) {
-      sessionStorage.gid = item.gid
-      this.$router.push('/catalog/detail/' + item.gid)
-    }
+    queryProudct() {
+      this.checkChangeCode()
+      if(this.checkstate === 'error'){
+          Toast({
+                message: '请输入正确的券码号',
+                position: 'middle',
+                duration: 5000
+              });
+        return;
+      }
+      let changeCode = this.changeCode;
+       sessionStorage.changeCode = changeCode;
+      let that = this;
+      this.axios
+        .get("http://card.yhy2009.com/frontychangeCode/queryList/" + changeCode)
+        .then(function (r) {
+          console.log("============:"+JSON.parse(JSON.stringify(r.data)).length)
+          if (JSON.parse(JSON.stringify(r.data)).length == 1) {
+            let item = r.data[0];
+            if (item.codeStatus != 1) {
+              Toast({
+                message: "券码号不可用",
+                position: "middle",
+                duration: 5000,
+              });
+            } else {
+              sessionStorage.id = item.pid;
+              sessionStorage.changeCode = item.changeCode;
+              that.$router.push("/catalog/detail/" + item.pid);
+            }
+          } else if (JSON.parse(JSON.stringify(r.data)).length < 1) {
+            Toast({
+              message: "券码号不可用",
+              position: "middle",
+              duration: 5000,
+            });
+          } else {
+            var arr = [];
+            console.log(JSON.stringify(r.data));
+            for (var item in r.data) {
+              console.log(JSON.stringify(r.data[item]))
+              arr.push(r.data[item].pid);
+            }
+            sessionStorage.pids = arr.join(',')
+             that.$router.push("/catalog/");
+          }
+        });
+    },
+    banner(item) {
+      // sessionStorage.id = item.id
+      this.$router.push("/catalog/detail/" + item.id);
+    },
+    goDetail(item) {
+      sessionStorage.id = item.id;
+      this.$router.push("/catalog/detail/" + item.id);
+    },
+    wxLogin() {
+      window.location.href =
+        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+        this.appid +
+        "&redirect_uri=http://cardmp.yhy2009.com&response_type=code&scope=snsapi_userinfo&state=1234#wechat_redirect";
+    },
+    getParamters(str) {
+      var url = window.location.href.split("?")[1];
+      if (!url) {
+        return null;
+      }
+      console.log("url:" + url);
+      var arr1 = url.split("&");
+      console.log("arr1:" + arr1);
+      for (var i in arr1) {
+        var arr2 = arr1[i].split("=");
+        if (str == arr2[0]) {
+          return arr2[1];
+        }
+      }
+      return null;
+    },
   },
   mounted: function () {
-    this.distinguish()
-    var that = this
-    this.loading = true
-    this.axios.post('http://www.ethedot.com/chatshop/Index/test')
-    .then(function (response) {
-      that.loading = false
-      for (var i = 0; i < response.data.length; i++) {
-        that.goods.push({click: response.data[i].click, gid: response.data[i].gid, name: response.data[i].name, price: response.data[i].price, src: 'http://www.ethedot.com/chatshop/Public/Uploads/' + response.data[i].pic})
-      }
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-    // banner
-    this.axios.post('http://www.ethedot.com/chatshop/Index/banner')
-    .then(function (response) {
-      for (var i = 0; i < response.data.length; i++) {
-        that.banners.push({
-          bid: response.data[i].bid,
-          pic: 'http://www.ethedot.com/chatshop/Public/Uploads/' + response.data[i].url,
-          gid: response.data[i].gid
-        })
-      }
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-  }
-}
+    let code = this.getParamters("code");
+    console.log("======code:" + code);
+    let that = this;
+    this.axios
+      .get(
+        "http://card.yhy2009.com/check/snsapiUserinfo?appid=" +
+          this.appid +
+          "&secret=" +
+          this.appSecret +
+          "&code=" +
+          code +
+          "&grant_type=authorization_code"
+      )
+      .then(function (r) {
+        console.log("-----------3---------");
+        console.log(JSON.stringify(r.data));
+        console.log(JSON.stringify(r.data.openid));
+        console.log("----------2----------");
+        if (r.data.openid) {
+          console.log("-------1-------------");
+          sessionStorage.openid = r.data.openid;
+          sessionStorage.userInfo = r.data
+          console.log("-------4-------------"); 
+        }
+      });
+  },
+};
 </script>
 
 <style lang='less'>
-body{
+body {
   margin: 0;
-} 
-li{
- list-style: none;
 }
-p{
+li {
+  list-style: none;
+}
+p {
   padding: 0;
   margin: 0;
 }
@@ -111,12 +167,12 @@ p{
   margin-bottom: 60px;
   position: relative;
   overflow-y: scroll;
-  &::-webkit-scrollbar{
+  &::-webkit-scrollbar {
     display: none;
   }
-  .list{
+  .list {
     width: 100%;
-    .loadhome{
+    .loadhome {
       .spinner {
         margin: 100px auto;
         width: 50px;
@@ -129,7 +185,7 @@ p{
         height: 100%;
         width: 6px;
         display: inline-block;
-        
+
         -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
         animation: stretchdelay 1.2s infinite ease-in-out;
       }
@@ -138,8 +194,8 @@ p{
         animation-delay: -1.1s;
       }
       .spinner .rect3 {
-        -webkit-animation-delay: -1.0s;
-        animation-delay: -1.0s;
+        -webkit-animation-delay: -1s;
+        animation-delay: -1s;
       }
       .spinner .rect4 {
         -webkit-animation-delay: -0.9s;
@@ -150,28 +206,37 @@ p{
         animation-delay: -0.8s;
       }
       @-webkit-keyframes stretchdelay {
-        0%, 40%, 100% { -webkit-transform: scaleY(0.4) } 
-        20% { -webkit-transform: scaleY(1.0) }
+        0%,
+        40%,
+        100% {
+          -webkit-transform: scaleY(0.4);
+        }
+        20% {
+          -webkit-transform: scaleY(1);
+        }
       }
       @keyframes stretchdelay {
-        0%, 40%, 100% {
+        0%,
+        40%,
+        100% {
           transform: scaleY(0.4);
           -webkit-transform: scaleY(0.4);
-        }  20% {
-          transform: scaleY(1.0);
-          -webkit-transform: scaleY(1.0);
+        }
+        20% {
+          transform: scaleY(1);
+          -webkit-transform: scaleY(1);
         }
       }
     }
-    .title{
+    .title {
       text-align: center;
       margin-top: 3%;
-      font{
+      font {
         padding-bottom: 2px;
         border-bottom: 2px solid #f29600;
       }
     }
-    .goods{
+    .goods {
       float: left;
       width: 44%;
       background: #ddd;
@@ -180,16 +245,16 @@ p{
       height: 150px;
       position: relative;
       overflow: hidden;
-      img{
+      img {
         width: 100%;
         height: 150px;
       }
-      img[lazy=loading] {
+      img[lazy="loading"] {
         width: 40;
         height: 40px;
         margin: 55px auto;
       }
-      .text{
+      .text {
         width: 100%;
         background: rgba(0, 0, 0, 0.6);
         position: absolute;
@@ -197,16 +262,16 @@ p{
         height: 30px;
         line-height: 30px;
         padding: 0 5%;
-        color:#999;
-        .name{
+        color: #999;
+        .name {
           width: 60%;
           display: block;
           float: left;
-          white-space:nowrap;
-          overflow:hidden;
-          text-overflow:ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
-        .price{
+        .price {
           color: #f29600;
         }
       }
@@ -258,64 +323,65 @@ p{
       }
     }
   }
-  .top{
-        position:absolute;
-        height: 30px;
-        top: 50px;
-        z-index: 1;
-        width: 80%;
-        left: 10%;
-         p{
-            margin: 0;
-            padding: 0;
-            line-height: 30px;
-            color: #bbb;
-        }
-        .location,.name,.search{
-            float: left;
-            width: 33.3%;
-            height: 30px;
-        }
-        .location{
-            text-align: left;
-            img{
-                width: 12px;
-                margin-right: 4%;
-                float: left;
-                margin-top: 6px;
-            }
-            .city{
-                margin: 0;
-                padding: 0;
-                float:left;
-                line-height: 30px;
-            }
-            .el-icon-caret-bottom{
-                float: left;
-                margin-left: 4%;
-                font-size: 12px;
-                margin-top: 10px;
-                color: #bbb;
-            }
-        }
-    }  
+  .top {
+    position: absolute;
+    height: 30px;
+    top: 50px;
+    z-index: 1;
+    width: 80%;
+    left: 10%;
+    p {
+      margin: 0;
+      padding: 0;
+      line-height: 30px;
+      color: #bbb;
+    }
+    .location,
+    .name,
+    .search {
+      float: left;
+      width: 33.3%;
+      height: 30px;
+    }
+    .location {
+      text-align: left;
+      img {
+        width: 12px;
+        margin-right: 4%;
+        float: left;
+        margin-top: 6px;
+      }
+      .city {
+        margin: 0;
+        padding: 0;
+        float: left;
+        line-height: 30px;
+      }
+      .el-icon-caret-bottom {
+        float: left;
+        margin-left: 4%;
+        font-size: 12px;
+        margin-top: 10px;
+        color: #bbb;
+      }
+    }
+  }
 }
 
-.mint-swipe{
+.mint-swipe {
   height: 175px;
   width: 100%;
-  img{
+  img {
     display: inline-block;
     height: auto;
     width: 100%;
   }
-  .mint-swipe-indicator{
+  .mint-swipe-indicator {
     opacity: 1;
     background: #fff;
   }
-  .mint-swipe-indicator.is-active{
+  .mint-swipe-indicator.is-active {
     background: #f29600;
   }
 }
-
 </style>

@@ -17,21 +17,25 @@ Vue.use(App)
 Vue.use(VueRouter)
 Vue.use(MintUI)
 Vue.use(ElementUI)
-axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+axios.defaults.headers['Content-Type'] = 'application/json'
 
 // 1. 定义（路由）组件。
 // 可以从其他文件 import 进来
 import home from './components/home/home'
 import homePage from './components/home/homePage'
+import productList from './components/home/productList'
 import search from './components/home/search'
 import catalog from './components/catalog/catalog'
 import catalogPage from './components/catalog/catalogPage'
 import detail from './components/catalog/detail'
+import caddress from './components/catalog/caddress'
 import cart from './components/cart/cart'
 import about from './components/about/about'
 import myHome from './components/about/home'
 import orderList from './components/about/orderList'
 import delivery from './components/about/myOrder/delivery/delivery'
+import delivey from './components/about/myOrder/delivey/delivey'
+import deliveyed from './components/about/myOrder/deliveyed/deliveyed'
 import drawback from './components/about/myOrder/drawback/drawback'
 import harvest from './components/about/myOrder/harvest/harvest'
 import obligation from './components/about/myOrder/obligation/obligation'
@@ -53,7 +57,9 @@ const routes = [
     children: [
       {path: '/', redirect: '/home/homePage'},
       {path: '/home/homePage', component: homePage},
-      {path: '/home/search', component: search}
+      {path: '/home/search', component: search},
+      // {path: '/catalog/detail/:id', name: 'detial', component: detail},
+      {path: '/home/productList', name: 'productList', component: productList},
     ]
   },
   {path: '/catalog',
@@ -61,7 +67,8 @@ const routes = [
     children: [
       {path: '/catalog', redirect: '/catalog/catalogPage'},
       {path: '/catalog/catalogPage', component: catalogPage},
-      {path: '/catalog/detail/:gid', name: 'detial', component: detail}
+      {path: '/catalog/detail/:id', name: 'detial', component: detail},
+      {path: '/catalog/caddress/:id', name: 'caddress', component: caddress}
     ]
   },
   {path: '/cart', component: cart},
@@ -80,7 +87,9 @@ const routes = [
           {path: '/about/orderList/delivery', component: delivery},
           {path: '/about/orderList/drawback', component: drawback},
           {path: '/about/orderList/harvest', component: harvest},
-          {path: '/about/orderList/ratings', component: ratings}
+          {path: '/about/orderList/ratings', component: ratings},
+          {path: '/about/orderList/delivey', component: delivey},
+          {path: '/about/orderList/deliveyed', component: deliveyed}
         ]
       },
       {path: '/about/collect', component: collect},

@@ -44,7 +44,7 @@ export default {
     bill () {
       if (this.defaultAddress !== null) {
         console.log(this.order)
-        window.open('http://www.ethedot.com/chatshop/Pay/pubpay/order/' + this.order)
+        window.open('http://card.yhy2009.com/Pay/pubpay/order/' + this.order)
       } else {
         alert('请选地址')
       }
@@ -58,7 +58,7 @@ export default {
     //  收货地址
     var that = this
     this.order = that.$route.params.num
-    this.axios.post('http://www.ethedot.com/chatshop/Index/defaultaddress', {
+    this.axios.post('http://card.yhy2009.com/Index/defaultaddress', {
       id: sessionStorage.getItem('id'),
       order: this.$route.params.num
     })

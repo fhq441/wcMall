@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     comfirm (item) {
-      this.axios.post('http://www.ethedot.com/chatshop/Index/harvest', {
+      this.axios.post('http://card.yhy2009.com/Index/harvest', {
         id: sessionStorage.getItem('id'),
         oid: item.oid
       })
@@ -50,7 +50,7 @@ export default {
   mounted: function () {
     this.distinguish()
     var that = this
-    this.axios.post('http://www.ethedot.com/chatshop/Index/orderlist', {
+    this.axios.post('http://card.yhy2009.com/Index/orderlist', {
       id: sessionStorage.getItem('id')
     })
     .then(function (response) {
@@ -62,7 +62,7 @@ export default {
             name: response[i].name,
             total: parseFloat(response[i].price),
             counter: parseFloat(response[i].sum),
-            pic: 'http://www.ethedot.com/chatshop/Public/Uploads/' + response[i].pic,
+            pic: 'http://card.yhy2009.com/Public/Uploads/' + response[i].pic,
             status: false
           })
         }

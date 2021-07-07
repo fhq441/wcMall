@@ -55,13 +55,13 @@ export default {
         if (goods[i].status === true) {
           this.menu.push({
             counter: goods[i].counter,
-            gid: goods[i].gid,
+            id: goods[i].id,
             cid: goods[i].cid
           })
         }
       }
       if (this.menu.length !== 0) {
-        this.axios.post('http://www.ethedot.com/chatshop/Index/obligation', {
+        this.axios.post('http://card.yhy2009.com/Index/obligation', {
           obligation: that.menu,
           id: sessionStorage.getItem('id')
         })
@@ -116,7 +116,7 @@ export default {
     },
     deleteItem (key, item) {
       var that = this
-      this.axios.post('http://www.ethedot.com/chatshop/Index/del', {
+      this.axios.post('http://card.yhy2009.com/Index/del', {
         cid: item.cid,
         id: sessionStorage.getItem('id')
       })
@@ -154,20 +154,20 @@ export default {
   mounted: function () {
     this.distinguish()
     var that = this
-    this.axios.post('http://www.ethedot.com/chatshop/Index/car', {
+    this.axios.post('http://card.yhy2009.com/Index/car', {
       id: sessionStorage.getItem('id')
     })
     .then(function (response) {
       response = response.data
       for (var i = 0; i < response.length; i++) {
         that.goods.push({
-          gid: response[i].gid,
+          id: response[i].id,
           cid: response[i].cid,
           name: response[i].name,
           price: parseFloat(response[i].price),
           total: parseFloat(response[i].price),
           counter: parseFloat(response[i].sum),
-          pic: 'http://www.ethedot.com/chatshop/Public/Uploads/' + response[i].pic,
+          pic: 'http://card.yhy2009.com/Public/Uploads/' + response[i].pic,
           status: false
         })
       }

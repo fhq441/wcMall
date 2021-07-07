@@ -4,36 +4,37 @@
       <div class="banner">
         <router-link to=""><span onclick="window.history.go(-1)" class="el-icon-arrow-left"></span></router-link>
       <mt-swipe :auto="0">
-        <mt-swipe-item v-for="item in lunbo" :key="item.id">
-            <img :src="item.pic" alt="">
-        </mt-swipe-item>
+        <!-- <mt-swipe-item v-for="item in lunbo" :key="item.id">
+            <img :src="productDetail.topImage" alt="">
+        </mt-swipe-item> -->
+         <img :src="productDetail.topImage" alt="">
       </mt-swipe>
       </div>
       <div class="introduce">
-        <p>{{ detailData[0] }}</p>
+        <p>{{ productDetail.productName }}</p>
       </div>
       <div class="price">
-        <p class="now-price">￥{{ detailData[1] }}</p>
-        <p class="old-price">原价：<del>￥{{ detailData[2] }}</del></p>
+        <p class="now-price">￥{{ productDetail.productPrice }}</p>
+        <p class="old-price">原价：<del>￥{{ productDetail.productPrice }}</del></p>
         <div class="delivery">
-          <p class="delivery-left">包邮</p>
-          <p class="delivery-right">上海</p>
+          <!-- <p class="delivery-left">包邮</p>
+          <p class="delivery-right">上海</p> -->
         </div>
       </div>
-      <div class="sale" @click="showSale">
+      <!-- <div class="sale" @click="showSale">
         <p class="sale-left">本店活动</p>
         <p class="arrow-right"><span class="el-icon-arrow-right"></span></p>
-      </div>
-      <div class="promise"  @click="showServer">
+      </div> -->
+      <!-- <div class="promise"  @click="showServer">
         <div class="promise-container">
           <p class="promise1"><span class="el-icon-circle-check"></span>运费险</p>
-          <p class="promise2"><span class="el-icon-circle-check"></span>七天退货</p>
+          <p class="promise2"><span class="el-icon-circle-check"></span>七天退货</p> 
           <p class="promise3"><span class="el-icon-circle-check"></span>正品保证</p>
         </div>
         <p class="arrow-right"><span class="el-icon-arrow-right"></span></p>
-      </div>
+      </div> -->
       <div class="product-info" @click="showGoods">
-        <div v-html="detailData[3]"></div>
+        <div v-html="productDetail.descInfo"></div>
       </div>
     </div>
     <div class="detail-footer">
@@ -44,8 +45,8 @@
         </div>
       </div>
       <div class="right">
-        <button class="add-cart" @click="addCart">加入购物车</button>
-        <button class="buy-now" @click="buyNow">立即购买</button>
+        <!-- <button class="add-cart" @click="addCart">加入购物车</button> -->
+        <button class="buy-now" @click="buyNow">兑换</button>
       </div>
     </div>
     <detailSale v-show="show" class="animated slideInUp" ref="detailSale"></detailSale>  
@@ -61,14 +62,17 @@ export default {
     return {
       show: false,
       detailData: [],
-      gid: '',
+      productDetail: '',
+      id: '',
+      id: '',
       addSuccess: false,
       lunbo: []
     }
   },
   methods: {
     buyNow () {
-      this.addCart()
+      // this.addCart()
+       this.$router.push('/catalog/caddress/'+this.id)
     },
     showSale () {
       this.$refs.detailSale.showSale()
@@ -81,18 +85,18 @@ export default {
     },
     store () {
       var that = this
-      that.axios.post('http://www.ethedot.com/chatshop/Index/store', {
+      that.axios.post('http://card.yhy2009.com/Index/store', {
         id: sessionStorage.getItem('id')
       })
       .then(function (response) {
         if (response.data.length > 0) {
           var arr = []
           for (var i = 0; i < response.data.length; i++) {
-            arr.push(response.data[i].gid)
+            arr.push(response.data[i].id)
           }
-          if (arr.indexOf(that.gid) < 0) {
-            that.axios.post('http://www.ethedot.com/chatshop/Index/addStore', {
-              gid: that.gid
+          if (arr.indexOf(that.id) < 0) {
+            that.axios.post('http://card.yhy2009.com/Index/addStore', {
+              id: that.id
             })
             .then(function (response) {
               if (response.data === 1) {
@@ -108,8 +112,8 @@ export default {
             alert('收藏成功！')
           }
         } else {
-          that.axios.post('http://www.ethedot.com/chatshop/Index/addStore', {
-            gid: that.gid
+          that.axios.post('http://card.yhy2009.com/Index/addStore', {
+            id: that.id
           })
           .then(function (response) {
             if (response.data === 1) {
@@ -129,18 +133,18 @@ export default {
     },
     addCart () {
       var that = this
-      that.axios.post('http://www.ethedot.com/chatshop/Index/car', {
+      that.axios.post('http://card.yhy2009.com/Index/car', {
         id: sessionStorage.getItem('id')
       })
       .then(function (response) {
         if (response.data.length > 0) {
           var arr = []
           for (var i = 0; i < response.data.length; i++) {
-            arr.push(response.data[i].gid)
+            arr.push(response.data[i].id)
           }
-          if (arr.indexOf(that.gid) < 0) {
-            that.axios.post('http://www.ethedot.com/chatshop/Index/caozuo', {
-              gid: that.gid,
+          if (arr.indexOf(that.id) < 0) {
+            that.axios.post('http://card.yhy2009.com/Index/caozuo', {
+              id: that.id,
               id: sessionStorage.getItem('id')
             })
             .then(function (response) {
@@ -157,8 +161,8 @@ export default {
             that.$router.push('/cart')
           }
         } else {
-          that.axios.post('http://www.ethedot.com/chatshop/Index/caozuo', {
-            gid: that.gid,
+          that.axios.post('http://card.yhy2009.com/Index/caozuo', {
+            id: that.id,
             id: sessionStorage.getItem('id')
           })
           .then(function (response) {
@@ -183,27 +187,16 @@ export default {
     detailServer
   },
   mounted: function () {
-    this.distinguish()
+    // this.distinguish() 
+    console.log("--------------------")
+    console.log(this.$route.params.id)
+    console.log("--------------------")
+    let id = this.$route.params.id
+    this.id = id
     var that = this
-    this.axios.post('http://www.ethedot.com/chatshop/Index/test')
-    .then(function (response) {
-      for (var i = 0; i < response.data.length; i++) {
-        if (that.$route.params.gid === response.data[i].gid) {
-          that.detailData.push(
-            response.data[i].name,
-            response.data[i].price,
-            response.data[i].oldpri,
-            response.data[i].content,
-          )
-          that.gid = response.data[i].gid
-          var arr = response.data[i].lunbo
-          for (let i = 0; i < arr.length; i++) {
-            that.lunbo.push({
-              'pic': arr[i]
-            })
-          }
-        }
-      }
+    this.axios.post('http://card.yhy2009.com/frontyproduct/detail/' + id)
+    .then(function (r) {
+      that.productDetail = r.data
     })
     .catch(function (error) {
       console.log(error)

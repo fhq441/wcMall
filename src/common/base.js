@@ -1,7 +1,7 @@
 exports.install = function (Vue, options) {
   Vue.prototype.distinguish = function () {
      // 身份判定
-    this.axios.post('http://www.ethedot.com/chatshop/Index/getsession')
+    this.axios.post('http://card.yhy2009.com/frontyproduct/frontlist')
     .then(function (response) {
       if (response.data === null) {
       //  console.log(window.location.href)
