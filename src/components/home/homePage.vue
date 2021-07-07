@@ -144,6 +144,8 @@ export default {
         if (r.data.openid) {
           console.log("-------1-------------");
           sessionStorage.openid = r.data.openid;
+          sessionStorage.nickname = r.data.wxNickName
+          sessionStorage.topImage = r.data.wxImage
           sessionStorage.userInfo = r.data
           console.log("-------4-------------"); 
         }
